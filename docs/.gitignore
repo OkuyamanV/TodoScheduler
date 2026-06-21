@@ -1,0 +1,17 @@
+# Visual Studio / VS cache
+.vs/
+*.vsidx
+*.slnx.sqlite
+
+# Visual Studio user files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
