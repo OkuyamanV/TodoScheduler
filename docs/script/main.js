@@ -23,10 +23,11 @@ const App = {
     // --------------------------------------------------------
     init() {
         // 各種機能（エフェクトエンジン、各モーダル）の初期化
+        SoundManager.initUnlock();
         EffectManager.init();
         TodoModal.init();
         DayCopyModal.init(); 
-        NotifySettingsModal.init(); 
+        NotifySettingsModal.init();
         
         // ユーザー操作のイベントリスナーを登録
         this.bindEvents();

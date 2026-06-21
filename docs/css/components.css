@@ -548,3 +548,35 @@ color: #2a81d4;
         margin: -8px -10px !important;
     }
 }
+
+/* ============================
+   ドロップダウンメニューの欠け対策
+   親カードの外にはみ出したメニューを切り取らない
+   ============================ */
+
+.current-section,
+.schedule-section,
+#current-list,
+#daily-list-container,
+.week-grid,
+.day-column {
+    overflow: visible !important;
+}
+
+.todo-item,
+.daily-todo-row,
+.saved-todo {
+    position: relative;
+    overflow: visible !important;
+    z-index: 1;
+}
+
+    .todo-item:has(.dropdown[style*="block"]),
+    .daily-todo-row:has(.dropdown[style*="block"]),
+    .saved-todo:has(.dropdown[style*="block"]) {
+        z-index: 100;
+    }
+
+.dropdown {
+    z-index: 9999 !important;
+}

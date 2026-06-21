@@ -8,6 +8,26 @@ const SoundManager = {
     // 途中で別の音が鳴った時などに、前の音を強制停止するために使用する。
     activeCompleteOscillators: [],
 
+    // ユーザー操作によって音声再生が許可されたかどうか
+    // false の間に発生した通知音は「溜めずに捨てる」
+    isAudioUnlocked: false,
+
+    // 初回クリック/タップでAudioContextを解放する
+    initUnlock() {
+        const unlock = () => {
+            this.isAudioUnlocked = true;
+
+            if (CelebrationEngine.ctx.state === 'suspended') {
+                CelebrationEngine.ctx.resume().catch(() => {
+                    // 失敗してもアプリ本体は止めない
+                });
+            }
+        };
+
+        window.addEventListener('pointerdown', unlock, { once: true, capture: true });
+        window.addEventListener('keydown', unlock, { once: true, capture: true });
+    },
+
     // --------------------------------------------------------
     // 1. 公開メソッド (Public Methods)
     // --------------------------------------------------------
@@ -16,12 +36,13 @@ const SoundManager = {
     // key: 再生する楽譜のキー（'chime', 'beep'など）
     // customVolume: 設定画面でのプレビュー再生時などに使用する一時的な音量
     playNotifier(key, customVolume = null) {
+        if (!key || key === 'none') return;
         this._play(key, false, customVolume);
     },
 
     // 完了音（タスク完了時・完全完了時のメロディ）を再生する
     playComplete(key, customVolume = null) {
-        // 既に別の完了音が鳴っていたら、音が重ならないように一度ストップする
+        if (!key || key === 'none') return;
         this.stopComplete();
         this._play(key, true, customVolume);
     },
@@ -62,8 +83,18 @@ const SoundManager = {
         const score = CelebrationScore[key];
         if (!score) return;
         
-        // ブラウザの仕様によるオーディオロックがかかっていたら解除を試みる
-        if (CelebrationEngine.ctx.state === 'suspended') CelebrationEngine.ctx.resume();
+        // ユーザー操作前に発生した音は、溜めずに捨てる
+        // これにより、初回クリック時に過去の通知音が一気に鳴るのを防ぐ
+        if (!this.isAudioUnlocked && CelebrationEngine.ctx.state !== 'running') {
+            return;
+        }
+
+        // ユーザー操作後で、まだAudioContextがsuspendedなら再開を試みる
+        if (CelebrationEngine.ctx.state === 'suspended') {
+            CelebrationEngine.ctx.resume().catch(() => {
+                // resume失敗時もアプリ本体は止めない
+            });
+        }
 
         // 処理のわずかな遅延による「過去の時間に再生をスケジュールしようとして発生するエラー」
         // を防ぐため、全体の開始時間を「現在時刻＋0.05秒後」に設定する

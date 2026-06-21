@@ -33,12 +33,12 @@ const NotifySettingsModal = {
         document.getElementById('btn-preview-start').onclick = () => {
             const val = document.getElementById('notify-start-sound').value;
             const vol = parseInt(document.getElementById('notify-volume').value) / 100;
-            SoundManager.playNotifier(val, vol);
+            SoundManager.playComplete(val, vol);//重なって再生して欲しくないため、通知音だが完了音として再生
         };
         document.getElementById('btn-preview-end').onclick = () => {
             const val = document.getElementById('notify-end-sound').value;
             const vol = parseInt(document.getElementById('notify-volume').value) / 100;
-            SoundManager.playNotifier(val, vol);
+            SoundManager.playComplete(val, vol);//重なって再生して欲しくないため、通知音だが完了音として再生
         };
         document.getElementById('btn-preview-complete').onclick = () => {
             const val = document.getElementById('complete-sound-type').value;
