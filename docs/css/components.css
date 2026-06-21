@@ -278,46 +278,101 @@ color: #2a81d4;
 }
 
 /* ============================
-   スマホ幅レイアウト：Todo行を2段構成にする
+   スマホ幅レイアウト：タスク名の長さ・タイプに応じて配置変更
    600px以下で適用
    ============================ */
 @media (max-width: 600px) {
 
-    /* ---------- 現在のTodo / 完了したTodo ---------- */
+    /* ==================================================
+       現在のTodo / 完了したTodo 共通
+       ================================================== */
 
     .todo-item,
     .todo-item.completed-item {
         display: grid !important;
-        grid-template-columns: 88px minmax(0, 1fr) 34px !important;
-        grid-template-rows: auto auto !important;
-        grid-template-areas:
-            "action name name"
-            ".      time menu" !important;
         gap: 8px 10px !important;
         align-items: center !important;
         padding: 10px 12px !important;
     }
 
-        /* 1段目左：完了ボタン / 完了時間バッジ */
+        /*
+       チェックタイプ / 完了済み：
+       [完了ボタン or バッジ]
+       タスク名　時間　⋮
+    */
+        .todo-item.has-action.short-name {
+            grid-template-columns: minmax(0, 1fr) auto 34px !important;
+            grid-template-areas:
+                "action action action"
+                "name   time   menu" !important;
+        }
+
+        /*
+       チェックタイプ / 完了済みで長い名前：
+       [完了ボタン or バッジ]
+       長いタスク名…
+       時間　　　　　　　　　⋮
+    */
+        .todo-item.has-action.long-name {
+            grid-template-columns: minmax(0, 1fr) auto 34px !important;
+            grid-template-areas:
+                "action action action"
+                "name   name   name"
+                "time   .      menu" !important;
+        }
+
+        /*
+       時間経過タイプ：
+       タスク名　時間　⋮
+       ※左の空欄を消す
+    */
+        .todo-item.no-action.short-name {
+            grid-template-columns: minmax(0, 1fr) auto 34px !important;
+            grid-template-areas:
+                "name time menu" !important;
+        }
+
+        /*
+       時間経過タイプで長い名前：
+       長いタスク名…
+       時間　　　　　　　　　⋮
+    */
+        .todo-item.no-action.long-name {
+            grid-template-columns: minmax(0, 1fr) auto 34px !important;
+            grid-template-areas:
+                "name name name"
+                "time .    menu" !important;
+        }
+
+        /* 左上：完了ボタン / 完了済み時間バッジ */
         .todo-item > .todo-action {
             grid-area: action !important;
             min-width: 0 !important;
-            width: 100% !important;
+            width: fit-content !important;
+            max-width: 160px !important;
             display: flex !important;
             justify-content: flex-start !important;
         }
 
+        /* 時間経過タイプでは空の左エリアを消す */
+        .todo-item.no-action > .todo-action {
+            display: none !important;
+        }
+
         .todo-item .check-btn,
         .todo-item .todo-badge {
-            width: 100% !important;
-            min-width: 0 !important;
+            width: auto !important;
+            min-width: 88px !important;
+            max-width: 160px !important;
             box-sizing: border-box !important;
             white-space: nowrap !important;
             overflow: hidden !important;
             text-overflow: ellipsis !important;
+            padding-left: 14px !important;
+            padding-right: 14px !important;
         }
 
-        /* 1段目右：Todo名 */
+        /* タスク名 */
         .todo-item > .todo-name {
             grid-area: name !important;
             min-width: 0 !important;
@@ -329,27 +384,38 @@ color: #2a81d4;
         }
 
         /*
-       3つ目のdivの中に「時間」と「⋮メニュー」が入っているため、
-       親div自体はレイアウト上消して、中身だけgridに参加させる
+       3つ目のdivの中に「時間」と「⋮」が入っているため、
+       親divをレイアウト上消して、中身をgridに直接参加させる
     */
         .todo-item > div:nth-child(3) {
             display: contents !important;
         }
 
-            /* 2段目中央：開始時間～終了時間 */
+            /* 時間表示 */
             .todo-item > div:nth-child(3) .todo-time {
                 grid-area: time !important;
                 display: flex !important;
                 grid-template-columns: none !important;
-                justify-content: flex-end !important;
                 align-items: center !important;
                 gap: 4px !important;
                 min-width: 0 !important;
-                width: 100% !important;
+                width: auto !important;
                 white-space: nowrap !important;
                 font-size: 0.9rem !important;
                 color: #5f6368 !important;
             }
+
+        /* 短い名前では時間を右寄せ */
+        .todo-item.short-name > div:nth-child(3) .todo-time {
+            justify-self: end !important;
+            justify-content: flex-end !important;
+        }
+
+        /* 長い名前で改行した時だけ、時間を左寄せ */
+        .todo-item.long-name > div:nth-child(3) .todo-time {
+            justify-self: start !important;
+            justify-content: flex-start !important;
+        }
 
         .todo-item .time-start,
         .todo-item .time-end,
@@ -361,12 +427,12 @@ color: #2a81d4;
             font-size: 0.75rem !important;
         }
 
-        /* 2段目右：⋮ */
+        /* ⋮メニュー */
         .todo-item > div:nth-child(3) > div:last-child {
             grid-area: menu !important;
             position: relative !important;
-            min-width: 0 !important;
             width: 34px !important;
+            min-width: 34px !important;
             text-align: right !important;
             justify-self: end !important;
         }
@@ -381,33 +447,59 @@ color: #2a81d4;
         }
 
 
-    /* ---------- 日間スケジュール ---------- */
+    /* ==================================================
+       日間スケジュール
+       ================================================== */
 
-    .daily-todo-row {
+    /*
+       短い名前：
+       [時間経過]
+       タスク名　時間　⋮
+    */
+    .daily-todo-row.short-name {
         display: grid !important;
-        grid-template-columns: 88px minmax(0, 1fr) 34px !important;
-        grid-template-rows: auto auto !important;
+        grid-template-columns: minmax(0, 1fr) auto 34px !important;
         grid-template-areas:
-            "type name name"
-            ".    time menu" !important;
+            "type type type"
+            "name time menu" !important;
         gap: 8px 10px !important;
         align-items: center !important;
         padding: 10px 12px !important;
     }
 
-    /* 1段目左：タイプ */
+    /*
+       長い名前：
+       [時間経過]
+       長いタスク名…
+       時間　　　　　　　　⋮
+    */
+    .daily-todo-row.long-name {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) auto 34px !important;
+        grid-template-areas:
+            "type type type"
+            "name name name"
+            "time .    menu" !important;
+        gap: 8px 10px !important;
+        align-items: center !important;
+        padding: 10px 12px !important;
+    }
+
     .daily-todo-type {
         grid-area: type !important;
-        min-width: 0 !important;
-        width: 100% !important;
+        justify-self: start !important;
+        min-width: 88px !important;
+        max-width: 160px !important;
+        width: auto !important;
         box-sizing: border-box !important;
         white-space: nowrap !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
+        padding-left: 14px !important;
+        padding-right: 14px !important;
         font-size: 0.8rem !important;
     }
 
-    /* 1段目右：Todo名 */
     .daily-todo-name {
         grid-area: name !important;
         min-width: 0 !important;
@@ -418,24 +510,31 @@ color: #2a81d4;
         font-size: 1rem !important;
     }
 
-    /* 2段目中央：開始時間～終了時間 */
     .daily-todo-time {
         grid-area: time !important;
         min-width: 0 !important;
-        width: 100% !important;
+        width: auto !important;
         padding-right: 0 !important;
-        text-align: right !important;
         white-space: nowrap !important;
         font-size: 0.9rem !important;
         color: #5f6368 !important;
     }
 
-    /* 2段目右：⋮ */
+    .daily-todo-row.short-name .daily-todo-time {
+        justify-self: end !important;
+        text-align: right !important;
+    }
+
+    .daily-todo-row.long-name .daily-todo-time {
+        justify-self: start !important;
+        text-align: left !important;
+    }
+
     .daily-todo-row > div:nth-child(4) {
         grid-area: menu !important;
         position: relative !important;
-        min-width: 0 !important;
         width: 34px !important;
+        min-width: 34px !important;
         text-align: right !important;
         justify-self: end !important;
     }

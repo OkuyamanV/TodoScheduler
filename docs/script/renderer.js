@@ -68,7 +68,15 @@ const TodoRenderer = {
                 }
                 
                 // 遅刻している場合は専用のクラス（赤い枠線や背景）を付与
-                const itemRowClass = isLate ? 'todo-item completed-item overdue-completed' : 'todo-item completed-item';
+                const isLongName = Array.from(t.name).length >= 13;
+
+                const itemRowClass = [
+                    'todo-item',
+                    'completed-item',
+                    'has-action',
+                    isLate ? 'overdue-completed' : '',
+                    isLongName ? 'long-name' : 'short-name'
+                ].filter(Boolean).join(' ');
                 
                 // バッジに表示する時間（完了時間があればそれ、なければ終了時間）
                 const displayBadgeTime = t.completedTime || t.end;
@@ -115,11 +123,19 @@ const TodoRenderer = {
             sorted.forEach(t => {
                 // 期限切れ（オーバーデュ）判定：チェックタイプ かつ 終了時間が現在時刻を過ぎている
                 const isOverdue = (t.taskType === 'check' && t.hasTime && t.end < currentTime);
-                const className = isOverdue ? 'todo-item overdue' : 'todo-item'; // 期限切れなら赤くする
-                
-                // チェックタイプのタスクのみ「✅ 完了」ボタンを表示する（時間経過タイプは表示しない）
-                const checkButton = (t.taskType === 'check' && !t.isCompleted) 
-                    ? `<button class="check-btn" onclick="App.completeTodo('${t.id}')"><span style="margin-right: 4px;">✓</span>完了</button>` 
+                const isCheckTask = t.taskType === 'check';
+                const isLongName = Array.from(t.name).length >= 13;
+
+                const className = [
+                    'todo-item',
+                    isOverdue ? 'overdue' : '',
+                    isCheckTask ? 'has-action' : 'no-action',
+                    isLongName ? 'long-name' : 'short-name'
+                ].filter(Boolean).join(' ');
+
+                // チェックタイプのタスクのみ「✓ 完了」ボタンを表示する
+                const checkButton = (isCheckTask && !t.isCompleted)
+                    ? `<button class="check-btn" onclick="App.completeTodo('${t.id}')"><span style="margin-right: 4px;">✓</span>完了</button>`
                     : '';
 
                 const startPart = t.start;
@@ -210,6 +226,9 @@ const TodoRenderer = {
         // ② タスクリストの描画
         const container = document.getElementById('daily-list-container');
         const sorted = [...todos].sort((a, b) => a[sortType].localeCompare(b[sortType]));
+
+        const isLongName = Array.from(t.name).length >= 13;
+        const rowClass = `daily-todo-row ${isLongName ? 'long-name' : 'short-name'}`;
         
         let html = '';
         sorted.forEach(t => {
@@ -217,7 +236,7 @@ const TodoRenderer = {
             const typeDisplay = t.taskType === 'check' ? 'チェック' : '時間経過';
             
             html += `
-                <div class="daily-todo-row">
+                <div class="${rowClass}">
                     <div class="daily-todo-type">${typeDisplay}</div>
                     <div class="daily-todo-name" title="${t.name}">${t.name}</div>
                     <div class="daily-todo-time">${timeDisplay}</div>
