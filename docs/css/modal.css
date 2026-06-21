@@ -1,0 +1,260 @@
+/* ============================
+   Modal & Forms
+   ============================ */
+.modal-overlay {
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    background: rgba(0,0,0,0.5); 
+    display: none; 
+    justify-content: center; 
+    align-items: center; 
+    z-index: 1000;
+}
+
+.modal-content { 
+    background: white; 
+    padding: 24px; 
+    border-radius: 12px; 
+    width: 380px; 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2); 
+}
+
+.modal-actions { 
+    display: flex; 
+    justify-content: flex-end; 
+    gap: 10px; 
+}
+
+.input-group { 
+    margin-bottom: 20px; 
+}
+
+.input-group label { 
+    display: block; 
+    margin-bottom: 8px; 
+    font-weight: bold; 
+}
+
+.input-group input { 
+    width: 100%; 
+    padding: 10px; 
+    border: 1px solid #dadce0; 
+    border-radius: 4px; 
+    box-sizing: border-box; 
+    font-size: 1rem; 
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    background: white;
+    font-size: 1rem;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ============================
+   Time Picker (Wheel)
+   ============================ */
+.time-picker-container { 
+    display: flex; 
+    justify-content: space-between; 
+    margin-bottom: 24px; 
+}
+
+.time-picker-block.locked {
+    pointer-events: none;
+    opacity: 0.6;
+    position: relative;
+}
+
+/* ★修正：デザインのノイズになっていた「固定」の青文字疑似要素を完全に遮断・抹殺 */
+.time-picker-block.locked::after {
+    display: none !important;
+}
+
+.wheel-wrapper { 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    background: #f1f3f4; 
+    border-radius: 8px; 
+    padding: 10px; 
+}
+
+.wheel {
+    height: 120px;
+    width: 60px;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    scrollbar-width: none;
+    position: relative;
+    background-color: #f1f3f4;
+    border-radius: 4px;
+}
+
+.wheel::-webkit-scrollbar { 
+    display: none; 
+}
+
+.wheel div {
+    height: 40px;
+    line-height: 40px;
+    scroll-snap-align: center;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.val-item {
+    font-size: 1.1rem;
+    color: #a0a5aa;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.val-item.selected {
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 1.4rem;
+}
+
+.spacer {
+    pointer-events: none;
+    height: 40px;
+}
+
+.setting-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.setting-row .input-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+/* ============================
+   曜日設定モーダルのボタン
+   ============================================== */
+.day-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid #dadce0;
+    background-color: #ffffff;
+    color: #5f6368;
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    padding: 0;
+    box-sizing: border-box;
+    
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.day-btn:hover {
+    background-color: #f1f3f4;
+}
+
+.day-btn.active {
+    background-color: #e8f0fe !important;
+    border-color: var(--primary-color) !important;
+    color: var(--primary-color) !important;
+}
+
+/* ==========================================================================
+   ⚙ 設定モーダル専用：トグルスイッチ ＆ 洗練美レイアウト用追加スタイル
+   ========================================================================== */
+
+.gear-icon {
+    font-size: 1.2em;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 1;
+}
+
+.setting-section-title {
+    margin: 20px 0 12px 0;
+    color: #202124;
+    font-size: 1.15rem;
+    font-weight: bold;
+}
+
+.setting-switch-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.setting-item-label {
+    font-size: 0.95rem;
+    color: #202124;
+    font-weight: normal !important;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 42px;
+    height: 22px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #dadce0;
+    transition: .25s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 22px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .25s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background-color: #1a73e8;
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+    transform: translateX(20px);
+}
+
+.toggle-switch input:disabled + .toggle-slider {
+    background-color: #eeeeee;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+.toggle-switch input:disabled + .toggle-slider:before {
+    box-shadow: none;
+}

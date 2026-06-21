@@ -1,0 +1,280 @@
+/* ============================
+   Todo Items & Grid
+   ============================ */
+.todo-item { 
+    background: #e8f0fe; 
+    margin: 5px 0; 
+    padding: 10px 15px; 
+    border-left: 5px solid var(--primary-color); 
+    border-radius: 4px; 
+    display: grid; 
+    grid-template-columns: 85px 1fr 145px; 
+    align-items: center; 
+    gap: 15px; 
+}
+
+/* 完了済みタスクアイテム */
+.todo-item.completed-item {
+    grid-template-columns: 85px 1fr 145px; 
+    border-left-color: var(--complete-color);
+    background: #f8f9fa;
+}
+
+/* ★修正：時間外に完了したタスクの背景を、他の完了タスクと同じ「薄グレー（#f8f9fa）」に戻しました */
+/* 左端の赤い太線と、赤い時間バッジだけで、ノイズをなくしつつスマートに超過を表現します */
+.todo-item.completed-item.overdue-completed {
+    background-color: #f8f9fa;
+    border-left-color: var(--danger-color);
+}
+
+.todo-item.overdue {
+    background-color: #fce8e6;
+    border-left-color: var(--danger-color);
+}
+
+.todo-action {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.check-btn {
+    background-color: #ffffff;
+    color: #3c4043;
+    border: 1px solid #3c4043;
+    padding: 7px 11px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: bold;
+    width: 100%;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    box-shadow: 0 1px 3px #3c40431d;
+}
+
+.check-btn:hover {
+    background-color: #7ac5f7;
+    color: #ffffff
+}
+
+.todo-name {
+    font-weight: bold;
+    color: #202124;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.todo-time {
+    display: grid;
+    grid-template-columns: 50px 20px 50px;
+    align-items: center;
+    font-size: 0.85rem;
+    color: #5f6368;
+    justify-content: end; 
+}
+
+.time-start { text-align: right !important; }
+.time-end { text-align: left !important; }
+
+.time-sep {
+    font-size: 0.5rem;
+}
+
+.todo-time span {
+    text-align: center;
+}
+
+.todo-badge {
+    font-size: 0.8rem;
+    padding: 5px 0;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: bold;
+    width: 100%;
+    -webkit-user-select: none;
+    user-select: none;
+}
+.todo-badge.badge-blue {
+    color: #1a73e8;
+    background: #e8f0fe;
+}
+.todo-badge.badge-red {
+    color: var(--danger-color);
+    background: #fce8e6;
+}
+
+/* 時間内完了タスク用の新バッジ */
+.todo-badge.badge-green {
+color: #2a81d4;
+    background: #eef6ff;
+}
+
+.week-grid {
+    display: grid; 
+    grid-template-columns: repeat(7, 1fr); 
+    gap: 10px; 
+    padding-top: 10px;
+    width: 100%; 
+}
+
+.day-column { 
+    background: #eee; 
+    border-radius: 4px; 
+    padding: 10px; 
+    min-height: 400px; 
+    min-width: 0; 
+}
+
+.day-column.current-day-column {
+    background-color: #e8f0fe;
+    border: 2px solid var(--primary-color);
+    transition: background-color 0.3s;
+}
+
+.day-header {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+    padding: 5px;
+    background: #ddd;
+}
+
+.day-column.current-day-column .day-header {
+    background-color: #d2e3fc;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.saved-todo {
+    background: white;
+    margin-bottom: 8px;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    position: relative;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.daily-todo-row {
+    background: #ffffff;
+    margin: 6px 0;
+    padding: 10px 15px;
+    border: 1px solid #dadce0;
+    border-radius: 6px;
+    display: grid;
+    grid-template-columns: 85px 1fr 110px 30px; 
+    align-items: center;
+    gap: 15px;
+    position: relative;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.daily-todo-name {
+    font-weight: bold;
+    color: #202124;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
+
+.daily-todo-time {
+    font-size: 0.85rem;
+    color: #5f6368;
+    text-align: right;
+    padding-right: 5px;
+}
+
+.daily-todo-type {
+    font-size: 0.8rem;
+    color: var(--primary-color);
+    background: #e8f0fe;
+    padding: 5px 0;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* ============================
+   Buttons & Dropdowns
+   ============================ */
+.menu-dots { 
+    cursor: pointer; 
+    float: right; 
+    color: #70757a; 
+    padding: 8px 10px;   
+    margin: -8px -10px;  
+    display: block;      
+    -webkit-user-select: none; 
+    user-select: none;         
+}
+
+.dropdown { 
+    position: absolute; 
+    right: 0; 
+    top: 25px; 
+    background: white; 
+    border: 1px solid #ccc; 
+    z-index: 10; 
+    display: none; 
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2); 
+    white-space: nowrap;
+    min-width: 90px;
+    border-radius: 4px;
+}
+
+.dropdown button { 
+    display: block; 
+    width: 100%; 
+    border: none; 
+    padding: 8px 15px; 
+    text-align: left; 
+    cursor: pointer; 
+    background: none; 
+    font-size: 0.9rem;
+}
+
+.dropdown button:hover {
+    background-color: #f1f3f4;
+}
+
+.delete-btn { 
+    color: var(--danger-color); 
+    font-weight: bold; 
+}
+
+.add-btn { 
+    width: 100%; 
+    padding: 8px; 
+    cursor: pointer; 
+    background: #fff; 
+    border: 1px dashed #999; 
+    border-radius: 4px; 
+    color: #666; 
+}
+
+.primary-btn { 
+    background: var(--primary-color); 
+    color: white; 
+    border: none; 
+    padding: 10px 20px; 
+    border-radius: 4px; 
+    cursor: pointer; 
+}
+
+.secondary-btn { 
+    background: #fff; 
+    border: 1px solid #dadce0; 
+    padding: 10px 20px; 
+    border-radius: 4px; 
+    cursor: pointer; 
+}
+
+#notify-setup { 
+    background: var(--primary-color); 
+    color: white; 
+    border: none; 
+    padding: 10px 20px; 
+    border-radius: 4px; 
+    cursor: pointer; 
+    white-space: nowrap; 
+}
