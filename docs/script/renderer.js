@@ -227,32 +227,34 @@ const TodoRenderer = {
         const container = document.getElementById('daily-list-container');
         const sorted = [...todos].sort((a, b) => a[sortType].localeCompare(b[sortType]));
 
-        const isLongName = Array.from(t.name).length >= 13;
-        const rowClass = `daily-todo-row ${isLongName ? 'long-name' : 'short-name'}`;
-        
         let html = '';
+
         sorted.forEach(t => {
             const timeDisplay = (t.hasTime && t.end !== "23:59") ? `${t.start}～${t.end}` : `${t.start}～`;
             const typeDisplay = t.taskType === 'check' ? 'チェック' : '時間経過';
-            
+
+            const isLongName = Array.from(t.name).length >= 13;
+            const rowClass = `daily-todo-row ${isLongName ? 'long-name' : 'short-name'}`;
+
             html += `
-                <div class="${rowClass}">
-                    <div class="daily-todo-type">${typeDisplay}</div>
-                    <div class="daily-todo-name" title="${t.name}">${t.name}</div>
-                    <div class="daily-todo-time">${timeDisplay}</div>
-                    <div style="position: relative; text-align: right;">
-                        <span class="menu-dots" onclick="App.toggleMenu('daily-${t.id}')">⋮</span>
-                        <div class="dropdown" id="menu-daily-${t.id}">
-                            <button onclick="App.editDailyTodo('${t.id}')">編集</button>
-                            <button class="delete-btn" onclick="App.deleteDailyTodo('${t.id}')">削除</button>
-                        </div>
+            <div class="${rowClass}">
+                <div class="daily-todo-type">${typeDisplay}</div>
+                <div class="daily-todo-name" title="${t.name}">${t.name}</div>
+                <div class="daily-todo-time">${timeDisplay}</div>
+                <div style="position: relative; text-align: right;">
+                    <span class="menu-dots" onclick="App.toggleMenu('daily-${t.id}')">⋮</span>
+                    <div class="dropdown" id="menu-daily-${t.id}">
+                        <button onclick="App.editDailyTodo('${t.id}')">編集</button>
+                        <button class="delete-btn" onclick="App.deleteDailyTodo('${t.id}')">削除</button>
                     </div>
                 </div>
-            `;
+            </div>
+        `;
         });
-        
+
         // リストの最後に「+ 追加」ボタンを配置
         html += `<button class="add-btn" onclick="App.addDailyTodo()" style="margin-top: 5px;">+ 日間スケジュールを追加</button>`;
+
         container.innerHTML = html;
     }
 };
