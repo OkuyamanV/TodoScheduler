@@ -278,70 +278,78 @@ color: #2a81d4;
 }
 
 /* ============================
-   幅狭レイアウト：Todo行を2段構成にする
-   950px以下で、スマホ・狭いPC幅の両方に適用
+   スマホ幅レイアウト：Todo行を2段構成にする
+   600px以下で適用
    ============================ */
-@media (max-width: 950px) {
+@media (max-width: 600px) {
 
     /* ---------- 現在のTodo / 完了したTodo ---------- */
 
     .todo-item,
     .todo-item.completed-item {
-        display: grid;
-        grid-template-columns: minmax(74px, 96px) minmax(0, 1fr) auto;
-        grid-template-rows: auto auto;
-        gap: 6px 12px;
-        align-items: center;
-        padding: 10px 12px;
+        display: grid !important;
+        grid-template-columns: 88px minmax(0, 1fr) 34px !important;
+        grid-template-rows: auto auto !important;
+        grid-template-areas:
+            "action name name"
+            ".      time menu" !important;
+        gap: 8px 10px !important;
+        align-items: center !important;
+        padding: 10px 12px !important;
     }
 
-        /* 1段目左：完了ボタン / タイプバッジ / 完了時間バッジ */
+        /* 1段目左：完了ボタン / 完了時間バッジ */
         .todo-item > .todo-action {
-            grid-column: 1;
-            grid-row: 1;
-            min-width: 0;
+            grid-area: action !important;
+            min-width: 0 !important;
+            width: 100% !important;
+            display: flex !important;
+            justify-content: flex-start !important;
         }
 
         .todo-item .check-btn,
         .todo-item .todo-badge {
-            width: 100%;
-            min-width: 0;
-            box-sizing: border-box;
-            white-space: nowrap;
+            width: 100% !important;
+            min-width: 0 !important;
+            box-sizing: border-box !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
         }
 
         /* 1段目右：Todo名 */
         .todo-item > .todo-name {
-            grid-column: 2 / 4;
-            grid-row: 1;
-            min-width: 0;
-            max-width: 100%;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            grid-area: name !important;
+            min-width: 0 !important;
+            max-width: 100% !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            font-size: 1rem !important;
         }
 
-        /* 2段目：時間 + ⋮ */
+        /*
+       3つ目のdivの中に「時間」と「⋮メニュー」が入っているため、
+       親div自体はレイアウト上消して、中身だけgridに参加させる
+    */
         .todo-item > div:nth-child(3) {
-            grid-column: 2 / 4;
-            grid-row: 2;
-            min-width: 0;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: flex-end !important;
-            gap: 10px !important;
+            display: contents !important;
         }
 
-        .todo-item .todo-time {
-            display: flex;
-            grid-template-columns: none;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 4px;
-            min-width: 0;
-            white-space: nowrap;
-            font-size: 0.9rem;
-        }
+            /* 2段目中央：開始時間～終了時間 */
+            .todo-item > div:nth-child(3) .todo-time {
+                grid-area: time !important;
+                display: flex !important;
+                grid-template-columns: none !important;
+                justify-content: flex-end !important;
+                align-items: center !important;
+                gap: 4px !important;
+                min-width: 0 !important;
+                width: 100% !important;
+                white-space: nowrap !important;
+                font-size: 0.9rem !important;
+                color: #5f6368 !important;
+            }
 
         .todo-item .time-start,
         .todo-item .time-end,
@@ -349,70 +357,95 @@ color: #2a81d4;
             text-align: left !important;
         }
 
+        .todo-item .time-sep {
+            font-size: 0.75rem !important;
+        }
+
+        /* 2段目右：⋮ */
+        .todo-item > div:nth-child(3) > div:last-child {
+            grid-area: menu !important;
+            position: relative !important;
+            min-width: 0 !important;
+            width: 34px !important;
+            text-align: right !important;
+            justify-self: end !important;
+        }
+
         .todo-item .menu-dots {
-            float: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
+            float: none !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 8px 10px !important;
+            margin: -8px -10px !important;
         }
 
 
     /* ---------- 日間スケジュール ---------- */
 
     .daily-todo-row {
-        display: grid;
-        grid-template-columns: minmax(74px, 96px) minmax(0, 1fr) auto;
-        grid-template-rows: auto auto;
-        gap: 6px 12px;
-        align-items: center;
-        padding: 10px 12px;
+        display: grid !important;
+        grid-template-columns: 88px minmax(0, 1fr) 34px !important;
+        grid-template-rows: auto auto !important;
+        grid-template-areas:
+            "type name name"
+            ".    time menu" !important;
+        gap: 8px 10px !important;
+        align-items: center !important;
+        padding: 10px 12px !important;
     }
 
     /* 1段目左：タイプ */
     .daily-todo-type {
-        grid-column: 1;
-        grid-row: 1;
-        min-width: 0;
-        width: 100%;
-        box-sizing: border-box;
-        white-space: nowrap;
+        grid-area: type !important;
+        min-width: 0 !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        font-size: 0.8rem !important;
     }
 
     /* 1段目右：Todo名 */
     .daily-todo-name {
-        grid-column: 2 / 4;
-        grid-row: 1;
-        min-width: 0;
-        max-width: 100%;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        grid-area: name !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        font-size: 1rem !important;
     }
 
-    /* 2段目：時間 */
+    /* 2段目中央：開始時間～終了時間 */
     .daily-todo-time {
-        grid-column: 2;
-        grid-row: 2;
-        min-width: 0;
-        padding-right: 0;
-        text-align: right;
-        white-space: nowrap;
-        font-size: 0.9rem;
+        grid-area: time !important;
+        min-width: 0 !important;
+        width: 100% !important;
+        padding-right: 0 !important;
+        text-align: right !important;
+        white-space: nowrap !important;
+        font-size: 0.9rem !important;
+        color: #5f6368 !important;
     }
 
     /* 2段目右：⋮ */
     .daily-todo-row > div:nth-child(4) {
-        grid-column: 3;
-        grid-row: 2;
-        min-width: 0;
-        text-align: right;
+        grid-area: menu !important;
+        position: relative !important;
+        min-width: 0 !important;
+        width: 34px !important;
+        text-align: right !important;
+        justify-self: end !important;
     }
 
     .daily-todo-row .menu-dots {
-        float: none;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
+        float: none !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 8px 10px !important;
+        margin: -8px -10px !important;
     }
 }
