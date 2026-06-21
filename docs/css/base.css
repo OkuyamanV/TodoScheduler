@@ -163,3 +163,42 @@ h2 {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
     margin-bottom: 30px; 
 }
+
+/* ============================
+   スマホレイアウト調整
+   ============================ */
+@media (max-width: 600px) {
+    main {
+        padding: 0 10px 16px 10px;
+    }
+
+    .section-header {
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+
+    .todo-item,
+    .todo-item.completed-item {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .todo-action {
+        justify-content: flex-start;
+    }
+
+    .todo-time {
+        justify-content: start;
+    }
+
+    .daily-todo-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .modal-content {
+        width: calc(100vw - 32px);
+        max-width: 380px;
+        box-sizing: border-box;
+    }
+}
