@@ -265,23 +265,12 @@ h2 {
             white-space: nowrap;
         }
 
-    .todo-item,
-    .todo-item.completed-item {
-        grid-template-columns: 1fr;
-        gap: 8px;
-    }
-
     .todo-action {
         justify-content: flex-start;
     }
 
     .todo-time {
         justify-content: start;
-    }
-
-    .daily-todo-row {
-        grid-template-columns: 1fr;
-        gap: 8px;
     }
 
     .week-grid {

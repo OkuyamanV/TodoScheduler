@@ -20,8 +20,6 @@
     background: #f8f9fa;
 }
 
-/* ★修正：時間外に完了したタスクの背景を、他の完了タスクと同じ「薄グレー（#f8f9fa）」に戻しました */
-/* 左端の赤い太線と、赤い時間バッジだけで、ノイズをなくしつつスマートに超過を表現します */
 .todo-item.completed-item.overdue-completed {
     background-color: #f8f9fa;
     border-left-color: var(--danger-color);
@@ -277,4 +275,144 @@ color: #2a81d4;
     border-radius: 4px; 
     cursor: pointer; 
     white-space: nowrap; 
+}
+
+/* ============================
+   幅狭レイアウト：Todo行を2段構成にする
+   950px以下で、スマホ・狭いPC幅の両方に適用
+   ============================ */
+@media (max-width: 950px) {
+
+    /* ---------- 現在のTodo / 完了したTodo ---------- */
+
+    .todo-item,
+    .todo-item.completed-item {
+        display: grid;
+        grid-template-columns: minmax(74px, 96px) minmax(0, 1fr) auto;
+        grid-template-rows: auto auto;
+        gap: 6px 12px;
+        align-items: center;
+        padding: 10px 12px;
+    }
+
+        /* 1段目左：完了ボタン / タイプバッジ / 完了時間バッジ */
+        .todo-item > .todo-action {
+            grid-column: 1;
+            grid-row: 1;
+            min-width: 0;
+        }
+
+        .todo-item .check-btn,
+        .todo-item .todo-badge {
+            width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
+            white-space: nowrap;
+        }
+
+        /* 1段目右：Todo名 */
+        .todo-item > .todo-name {
+            grid-column: 2 / 4;
+            grid-row: 1;
+            min-width: 0;
+            max-width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* 2段目：時間 + ⋮ */
+        .todo-item > div:nth-child(3) {
+            grid-column: 2 / 4;
+            grid-row: 2;
+            min-width: 0;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: flex-end !important;
+            gap: 10px !important;
+        }
+
+        .todo-item .todo-time {
+            display: flex;
+            grid-template-columns: none;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 4px;
+            min-width: 0;
+            white-space: nowrap;
+            font-size: 0.9rem;
+        }
+
+        .todo-item .time-start,
+        .todo-item .time-end,
+        .todo-item .time-sep {
+            text-align: left !important;
+        }
+
+        .todo-item .menu-dots {
+            float: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+
+    /* ---------- 日間スケジュール ---------- */
+
+    .daily-todo-row {
+        display: grid;
+        grid-template-columns: minmax(74px, 96px) minmax(0, 1fr) auto;
+        grid-template-rows: auto auto;
+        gap: 6px 12px;
+        align-items: center;
+        padding: 10px 12px;
+    }
+
+    /* 1段目左：タイプ */
+    .daily-todo-type {
+        grid-column: 1;
+        grid-row: 1;
+        min-width: 0;
+        width: 100%;
+        box-sizing: border-box;
+        white-space: nowrap;
+    }
+
+    /* 1段目右：Todo名 */
+    .daily-todo-name {
+        grid-column: 2 / 4;
+        grid-row: 1;
+        min-width: 0;
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* 2段目：時間 */
+    .daily-todo-time {
+        grid-column: 2;
+        grid-row: 2;
+        min-width: 0;
+        padding-right: 0;
+        text-align: right;
+        white-space: nowrap;
+        font-size: 0.9rem;
+    }
+
+    /* 2段目右：⋮ */
+    .daily-todo-row > div:nth-child(4) {
+        grid-column: 3;
+        grid-row: 2;
+        min-width: 0;
+        text-align: right;
+    }
+
+    .daily-todo-row .menu-dots {
+        float: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
 }
