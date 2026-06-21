@@ -102,16 +102,16 @@ const TodoStore = {
     // LocalStorage Key: 'notifyConfig'
     notifyConfig: JSON.parse(localStorage.getItem('notifyConfig')) || {
         startNotify: true,            // 開始時の通知 ON/OFF
-        startSound: 'chime',          // 開始時の通知音種類
-        endNotify: false,             // 終了時の通知 ON/OFF
-        endSound: 'beep',             // 終了時の通知音種類
+        startSound: 'piano',          // 開始時の通知音種類
+        endNotify: true,             // 終了時の通知 ON/OFF
+        endSound: 'chime',             // 終了時の通知音種類
         volume: 0.5,                  // 通知音・完了音のマスター音量 (0.0 ~ 1.0)
         completeEffect: true,         // 通常完了時のエフェクト (ポワポワ) ON/OFF
         fullCompleteEffect: true,     // 完全完了時のエフェクト (紙吹雪) ON/OFF
-        completeSound: false,         // 通常完了時のサウンド ON/OFF
+        completeSound: true,         // 通常完了時のサウンド ON/OFF
         completeSoundType: 'melody',  // 通常完了時のサウンド種類
-        fullCompleteSound: false,     // 完全完了時のサウンド ON/OFF
-        fullCompleteSoundType: 'melody' // 完全完了時のサウンド種類
+        fullCompleteSound: true,     // 完全完了時のサウンド ON/OFF
+        fullCompleteSoundType: 'fanfare' // 完全完了時のサウンド種類
     },
 
     // ========================================================

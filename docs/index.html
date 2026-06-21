@@ -2,17 +2,18 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>Weekly Todo Notification</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo Scheduler</title>
+
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/toast.css">
     <link rel="stylesheet" href="css/modal.css">
     <link rel="stylesheet" href="css/components.css">
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
-    
+
     <style>
         /* ロゴ専用のリッチなグラデーションスタイル */
         .logo {
@@ -27,7 +28,7 @@
             filter: drop-shadow(2px 2px 3px rgba(0, 0, 0, 0.15));
             margin-top: 2px;
         }
-        
+
         /* レスポンシブ対応：画面幅が狭い場合、週間スケジュールを横並びから縦並びに変更する */
         @media (max-width: 950px) {
             .week-grid {
@@ -35,10 +36,11 @@
                 flex-direction: column !important;
                 gap: 15px;
             }
-            .week-grid .day-column {
-                min-height: auto !important;
-                padding-bottom: 10px;
-            }
+
+                .week-grid .day-column {
+                    min-height: auto !important;
+                    padding-bottom: 10px;
+                }
         }
     </style>
 </head>
