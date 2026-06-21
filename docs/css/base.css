@@ -168,14 +168,102 @@ h2 {
    スマホレイアウト調整
    ============================ */
 @media (max-width: 600px) {
+    html,
+    body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        min-width: 0;
+    }
+
+    header {
+        width: 100%;
+        padding: 10px 12px;
+        gap: 8px;
+    }
+
+    .logo {
+        min-width: 0;
+        max-width: calc(100vw - 150px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: clamp(1.25rem, 7vw, 1.8rem) !important;
+    }
+
+    .header-controls {
+        flex: 0 0 auto;
+        min-width: auto;
+        gap: 8px;
+    }
+
+    #notify-setup {
+        white-space: nowrap;
+        padding: 10px 16px;
+    }
+
     main {
+        width: 100%;
+        max-width: 100%;
         padding: 0 10px 16px 10px;
+        overflow-x: hidden;
+    }
+
+    .current-section,
+    .schedule-section {
+        width: 100%;
+        max-width: 100%;
+        padding: 16px 12px;
+        margin-bottom: 24px;
+        overflow: hidden;
     }
 
     .section-header {
-        flex-wrap: wrap;
-        align-items: flex-start;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+        align-items: start;
+        width: 100%;
     }
+
+        .section-header h2 {
+            width: 100%;
+            min-width: 0;
+            white-space: normal;
+            font-size: clamp(1.35rem, 7vw, 1.8rem);
+            line-height: 1.25;
+        }
+
+    #current-view-mode {
+        width: 100% !important;
+        max-width: none !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        flex: none !important;
+    }
+
+    .controls {
+        width: 100%;
+        min-width: 0;
+        display: flex;
+        justify-content: flex-start;
+        gap: 16px;
+        flex-shrink: 1;
+        flex-wrap: wrap;
+        font-size: 0.9rem;
+        white-space: normal;
+    }
+
+        .controls label {
+            white-space: nowrap;
+        }
 
     .todo-item,
     .todo-item.completed-item {
@@ -196,9 +284,25 @@ h2 {
         gap: 8px;
     }
 
+    .week-grid {
+        width: 100%;
+        max-width: 100%;
+    }
+
+        .week-grid .day-column {
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
+        }
+
+    #daily-header-days {
+        flex-wrap: wrap;
+    }
+
     .modal-content {
-        width: calc(100vw - 32px);
-        max-width: 380px;
+        width: calc(100vw - 32px) !important;
+        max-width: 390px;
         box-sizing: border-box;
     }
 }
