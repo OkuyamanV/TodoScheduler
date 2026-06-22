@@ -155,7 +155,7 @@ const EffectManager = {
 
     // 通常完了時：画面下からフワフワと上昇する「ポワポワ」エフェクト
     playComplete() {
-        const count = 25; // 粒の数
+        const count = this.getResponsiveEffectCount(25); // 粒の数
         const w = window.innerWidth;
         const h = window.innerHeight;
 
@@ -193,7 +193,7 @@ const EffectManager = {
 
     // 完全完了時：画面の左右下端から中央へ向かって放たれる「紙吹雪」エフェクト
     playFullComplete() {
-        const count = 80; // 豪華にするため粒の数を多くする
+        const count = this.getResponsiveEffectCount(80); // 豪華にするため粒の数を多くする
         const w = window.innerWidth;
         const h = window.innerHeight;
         const opacities = [0.2, 0.4, 0.6, 0.8, 1]; // 遠近感を出すための透明度バリエーション
