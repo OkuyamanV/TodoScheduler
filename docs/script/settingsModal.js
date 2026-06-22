@@ -10,12 +10,14 @@ const NotifySettingsModal = {
     init() {
         // ① 音源のマスターリストを定義
         const soundList = [
-            { val: 'chime', name: 'チャイム' },
-            { val: 'melody', name: 'メロディ' },
             { val: 'beep', name: '電子音' },
+            { val: 'melody', name: 'メロディ' },
+            { val: 'chime', name: 'チャイム' },
             { val: 'piano', name: 'ピアノ' },
+            { val: 'calm', name: '穏やか' },
             { val: 'fanfare', name: 'ファンファーレ' },
-            { val: 'levelUp', name: 'レベルアップ' }
+            { val: 'levelUp', name: 'レベルアップ' },
+            { val: 'clear', name: 'クリア' }
         ];
         
         // HTMLのセレクトボックス（<select>）の中身を動的に生成する
