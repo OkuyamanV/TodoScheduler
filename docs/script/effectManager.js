@@ -7,6 +7,10 @@ const EffectManager = {
     container: null,    // エフェクトを描画する専用のフルスクリーン要素
     particles: [],      // 現在画面上に存在しているすべての粒子の配列
     animating: false,   // アニメーションループが実行中かどうかのフラグ
+
+    // deltaTime制御用
+    lastTimestamp: null,
+    BASE_FRAME_MS: 1000 / 60,
     
     // アプリのテーマカラー（RGB値）。エフェクトの色を変更したい場合はここを書き換える
     themeColorRGB: '190, 225, 255',
@@ -30,61 +34,101 @@ const EffectManager = {
         document.body.appendChild(this.container);
     },
 
+    // 指定範囲に値を収める
+    clamp(value, min, max) {
+        return Math.min(max, Math.max(min, value));
+    },
+
+    // 画面幅に応じてエフェクト量を補正する
+    // 幅500px以下: 50% / 幅2000px以上: 100%
+    getResponsiveEffectCount(baseCount) {
+        const minWidth = 500;
+        const maxWidth = 2000;
+        const minRate = 0.5;
+        const maxRate = 1.0;
+
+        const width = window.innerWidth || minWidth;
+        const t = this.clamp((width - minWidth) / (maxWidth - minWidth), 0, 1);
+        const rate = minRate + (maxRate - minRate) * t;
+
+        return Math.max(1, Math.round(baseCount * rate));
+    },
+
     // アニメーションの描画ループを開始する
     startLoop() {
         if (this.animating) return; // 既にループ中なら何もしない
+
         this.animating = true;
-        
-        // requestAnimationFrame を使って、モニターの描画間隔（通常60FPS）に合わせて画面を更新する
-        const loop = () => {
-            this.update();
+        this.lastTimestamp = null;
+
+        // requestAnimationFrameのtimestampを使って、環境差を吸収する
+        const loop = (timestamp) => {
+            const deltaMs = this.lastTimestamp === null
+                ? this.BASE_FRAME_MS
+                : timestamp - this.lastTimestamp;
+
+            this.lastTimestamp = timestamp;
+
+            // 60FPSの1フレームを「1.0」とする
+            // タブ復帰時などに一気に飛びすぎないよう最大3フレーム分に制限
+            const frameScale = this.clamp(deltaMs / this.BASE_FRAME_MS, 0.25, 3.0);
+
+            this.update(frameScale);
+
             // 粒子が1つでも残っていればループを継続し、全滅したら停止してメモリを節約する
             if (this.particles.length > 0) {
                 requestAnimationFrame(loop);
             } else {
                 this.animating = false;
+                this.lastTimestamp = null;
             }
         };
+
         requestAnimationFrame(loop);
     },
 
     // --------------------------------------------------------
     // 2. 物理演算と描画の更新 (Physics & Render Update)
     // --------------------------------------------------------
-    update() {
+    update(frameScale = 1) {
         // 配列から要素を削除していくため、バグを防ぐ目的で「後ろから前に」ループを回す
         for (let i = this.particles.length - 1; i >= 0; i--) {
             const p = this.particles[i];
-            
+
             // 物理演算：速度（Velocity）を座標（x, y）に足し込み、重力を下方向の速度（vy）に足す
-            p.x += p.vx;
-            p.y += p.vy;
-            p.vy += p.gravity;
-            p.age++; // 粒子の年齢（生存フレーム数）を増やす
+            // frameScaleを掛けることで、60FPS/120FPS/処理落ち時の動き方を近づける
+            p.x += p.vx * frameScale;
+            p.y += p.vy * frameScale;
+            p.vy += p.gravity * frameScale;
+            p.age += frameScale; // 粒子の年齢も60FPS基準で進める
 
             let currentOpacity = p.baseOpacity;
 
             /* === ①「ポワポワ」タイプ特有の動き === */
             if (p.type === 'powa') {
                 // サイン波（Math.sin）を使って、年齢に応じてホタルのようにフワフワと明滅させる
-                currentOpacity = p.baseOpacity * (0.4 + 0.6 * Math.sin(p.age * p.twinkleSpeed));
+                const twinkle = 0.4 + 0.6 * Math.sin(p.age * p.twinkleSpeed);
+                currentOpacity = p.baseOpacity * Math.max(0, twinkle);
+
                 // 左右にもサイン波を使ってユラユラと揺らしながら上昇させる
-                p.x += Math.sin(p.age * 0.05) * 0.5; 
+                p.x += Math.sin(p.age * 0.05) * 0.5 * frameScale;
             }
 
             /* === ②「紙吹雪」タイプ特有の動き === */
             if (p.type === 'confetti') {
-                p.rotation += p.rotationSpeed;
-                
-                // 空気抵抗（drag）による滑らかな減速。1フレームごとに速度が少しずつ落ちる
-                p.vx *= p.drag;
-                p.vy *= p.drag;
-                p.rotationSpeed *= p.drag; 
+                p.rotation += p.rotationSpeed * frameScale;
+
+                // 空気抵抗（drag）もframeScaleに応じて補正する
+                // 120FPSで減速しすぎる/低FPSで減速しなさすぎる問題を抑える
+                const dragRate = Math.pow(p.drag, frameScale);
+                p.vx *= dragRate;
+                p.vy *= dragRate;
+                p.rotationSpeed *= dragRate;
             }
 
-            // 寿命（lifespan）を過ぎたら、30フレームかけて徐々に透明にしていく（フェードアウト）
+            // 寿命（lifespan）を過ぎたら、30フレーム相当で徐々に透明にしていく
             if (p.age > p.lifespan) {
-                currentOpacity *= Math.max(0, 1 - (p.age - p.lifespan) / 30); 
+                currentOpacity *= Math.max(0, 1 - (p.age - p.lifespan) / 30);
             }
 
             // 完全に消え去った、または画面の下端（innerHeight）よりも下に落ちた粒子はDOMから削除する
@@ -97,7 +141,7 @@ const EffectManager = {
             // 計算した座標と回転をHTML要素のCSS（transform）に適用する
             let transformStr = `translate(${p.x}px, ${p.y}px)`;
             if (p.type === 'confetti') {
-                transformStr += ` rotate(${p.rotation}deg) skew(10deg, 10deg)`; // 少し歪ませて紙切れ感を出す
+                transformStr += ` rotate(${p.rotation}deg) skew(10deg, 10deg)`;
             }
 
             p.el.style.transform = transformStr;
